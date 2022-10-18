@@ -1,29 +1,44 @@
-NAME		= 	pipex
+LIBFT_PATH		=	./libs/libft
+LIBFT			=	$(LIBFT_PATH)/libft.a
 
-SRCS		= 	pipex.c
+SOURCES_FILES	=	pipex.c
 
-HEADER		=	pipex.h
+SOURCES_DIR		=	.
 
-OBJS		= 	$(SRCS:.c=.o)
+HEADER			=	$(SOURCES_DIR)/pipex.h
 
-CC			= 	gcc
+SOURCES			=	$(addprefix $(SOURCES_DIR)/, $(SOURCES_FILES))
 
-CCFLAGS 	= 	-Wall -Wextra -Werror
+OBJECTS			= 	$(SOURCES:.c=.o)
 
-.c.o:
-		$(CC) $(CCFLAGS) -c $< -o $(<:.c=.o)
+MAKE			=	make
 
-$(NAME):	$(OBJS) $(HEADER)
-			$(CC) $(CCFLAGS) $(OBJS) $(HEADER) -o $(NAME) 
+NAME			=	pipex
 
-all:		$(NAME)
+CC				=	gcc
+RM				=	rm -f
+
+CFLAGS			=	-g3 -Wall -Wextra -Werror -D BUFFER_SIZE=100
+
+.c.o:		
+	$(CC) $(CFLAGS) -c $< -o $(<:.c=.o)
+
+all:	$(NAME)
+
+$(NAME):	$(LIBFT) $(OBJECTS) $(HEADER)
+	$(CC) $(CFLAGS) $(OBJECTS) $(LIBFT) $(HEADER) -o $(NAME)
+
+$(LIBFT):
+	$(MAKE) -C $(LIBFT_PATH)
 
 clean:
-		rm -f $(OBJS)
+	$(MAKE) -C $(LIBFT_PATH) clean
+	$(RM) $(OBJECTS)
 
 fclean:		clean
-		rm -f $(NAME)
+	$(MAKE) -C $(LIBFT_PATH) fclean
+	$(RM) $(NAME)
 
-re:		fclean all
+re:			fclean all
 
-.PHONY:		all clean fclean re
+.PHONY:		all clean fclean re libft
