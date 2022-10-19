@@ -1,7 +1,7 @@
 LIBFT_PATH		=	./libs/libft
 LIBFT			=	$(LIBFT_PATH)/libft.a
 
-SOURCES_FILES	=	pipex.c
+SOURCES_FILES	=	pipex.c free.c
 
 SOURCES_DIR		=	.
 

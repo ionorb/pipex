@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:23:44 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/19 17:11:08 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/19 21:02:17 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,26 +20,25 @@ char	**ft_get_paths(char **env)
 	while (env[i])
 	{
 		if (ft_strncmp(env[i], "PATH=", 5) == 0)
-		{
-			printf("%s\n", env[i] + 5);
-			return(ft_split(env[i] + 5, ":"));
-		}
+			return (ft_split(env[i] + 5, ":"));
 		i++;
 	}
 	return (NULL);
 }
 
-char	*get_valid_path(char **env)
+char	*get_valid_path(char **env, char *prog)
 {
 	char	**paths;
+	char	*cmd;
 	int		i;
 
 	i = 0;
+	cmd = ft_strjoin("/", prog);
 	paths = ft_get_paths(env);
 	while (paths[i])
 	{
-		if (access(ft_strjoin(ft_strdup(paths[i]), "/push_swap_gui"), X_OK) == 0)
-			return (ft_strjoin(ft_strdup(paths[i]), "/push_swap_gui"));
+		if (access(ft_strjoin(ft_strdup(paths[i]), cmd), X_OK) == 0)
+			return (ft_strjoin(ft_strdup(paths[i]), cmd));
 		i++;
 	}
 	free(paths);
@@ -48,25 +47,27 @@ char	*get_valid_path(char **env)
 
 int	main(int ac, char **av, char **env)
 {
-	pid_t	pidz;
+	t_pipex	*pipex;
 
 	(void)ac;
-	printf("valid: %s\n", get_valid_path(env));
-	pidz = fork();
-	if (pidz == -1)
+	pipex = malloc(sizeof (t_pipex));
+	pipe(pipex->pipefd);
+	pipex->cmd1 = ft_split(av[1], " ");
+	pipex->cmd2 = ft_split(av[2], " ");
+	pipex->pid1 = fork();
+	if (pipex->pid1 == 0)
 	{
-		perror("YOOOO: ");
-		return (0);
+		pipex->cmd1[0] = get_valid_path(env, pipex->cmd1[0]);
+		execve(pipex->cmd1[0], pipex->cmd1, env);
 	}
-	if (pidz == 0)
+	pipex->pid2 = fork();
+	if (pipex->pid2 == 0)
 	{
-		printf("[%d]\n", pidz);
-		execve(av[1], av + 1, env);
+		pipex->cmd2[0] = get_valid_path(env, pipex->cmd2[0]);
+		execve(pipex->cmd2[0], pipex->cmd2, env);
 	}
-	else
-	{
-		printf("[%d]\n", pidz);
-		execve(av[1], av + 1, env);
-	}
+	waitpid(pipex->pid1, NULL, 0);
+	waitpid(pipex->pid2, NULL, 0);
+	free_everything(pipex);
 	return (0);
 }
