@@ -6,12 +6,11 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:23:44 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/21 19:56:32 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/21 20:02:46 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
 
 void	init_pipex(t_pipex *pipex, char **av, int infd, int outfd)
 {
