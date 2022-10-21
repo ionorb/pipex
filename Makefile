@@ -1,7 +1,7 @@
 LIBFT_PATH		=	./libs/libft
 LIBFT			=	$(LIBFT_PATH)/libft.a
 
-SOURCES_FILES	=	pipex.c free.c
+SOURCES_FILES	=	pipex.c finish.c
 
 SOURCES_DIR		=	.
 
@@ -34,6 +34,7 @@ $(LIBFT):
 clean:
 	$(MAKE) -C $(LIBFT_PATH) clean
 	$(RM) $(OBJECTS)
+	$(RM) outfile
 
 fclean:		clean
 	$(MAKE) -C $(LIBFT_PATH) fclean

@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:23:51 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/21 15:00:48 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/21 16:31:11 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,10 @@ typedef struct s_pipex
 	pid_t	pid2;
 }	t_pipex;
 
-//free
-void	free_everything(t_pipex *pipex);
+//finish
+void	ft_exit_msg(char *msg);
+void	close_free(t_pipex *pipex);
 void	ft_free_arr(char **cmd);
+void	ft_end(t_pipex *pipex, int infd, int outfd);
 
 #endif
