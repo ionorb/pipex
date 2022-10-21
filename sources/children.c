@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 19:55:39 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/21 19:56:43 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/21 20:13:54 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,9 @@ char	*get_valid_path(char **env, char *prog)
 
 void	first_child(t_pipex *pipex, char **env)
 {
-	pipex->validcmd1 = get_valid_path(env, pipex->cmd1[0]);
+	pipex->validcmd1 = pipex->cmd1[0];
+	if (access(pipex->cmd1[0], X_OK) != 0)
+		pipex->validcmd1 = get_valid_path(env, pipex->cmd1[0]);
 	if (pipex->validcmd1 == NULL)
 		ft_exit_msg("first command not found", pipex);
 	close(pipex->pipefd[0]);
@@ -70,7 +72,9 @@ void	first_child(t_pipex *pipex, char **env)
 
 void	second_child(t_pipex *pipex, char **env)
 {
-	pipex->validcmd2 = get_valid_path(env, pipex->cmd2[0]);
+	pipex->validcmd2 = pipex->cmd2[0];
+	if (access(pipex->cmd2[0], X_OK) != 0)
+		pipex->validcmd2 = get_valid_path(env, pipex->cmd2[0]);
 	if (pipex->validcmd2 == NULL)
 		ft_exit_msg("second command not found", pipex);
 	close(pipex->pipefd[1]);
