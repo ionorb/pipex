@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:23:44 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/21 14:19:54 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/21 15:20:27 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ char	*get_valid_path(char **env, char *prog)
 {
 	char	**paths;
 	char	*cmd;
+	char	*cmdpath;
 	int		i;
 
 	i = 0;
@@ -37,26 +38,38 @@ char	*get_valid_path(char **env, char *prog)
 	paths = ft_get_paths(env);
 	while (paths[i])
 	{
-		if (access(ft_strjoin(ft_strdup(paths[i]), cmd), X_OK) == 0)
-			return (ft_strjoin(ft_strdup(paths[i]), cmd));
+		cmdpath = ft_strjoin(paths[i], cmd);
+		if (access(cmdpath, X_OK) == 0)
+		{
+			free(cmd);
+			return (cmdpath);
+		}
+		free(cmdpath);
 		i++;
 	}
-	free(paths);
+	ft_free_arr(paths);
+	free(cmd);
 	return (NULL);
 }
 
 void	first_child(t_pipex *pipex, char **env)
 {
 	pipex->cmd1[0] = get_valid_path(env, pipex->cmd1[0]);
+	close(pipex->pipefd[0]);
 	dup2(pipex->pipefd[1], 1);
-	execve(pipex->cmd1[0], pipex->cmd1, env);
+	close(pipex->pipefd[1]);
+	if (execve(pipex->cmd1[0], pipex->cmd1, env) == -1)
+		perror("execve(first_child): ");
 }
 
 void	second_child(t_pipex *pipex, char **env)
 {
 	pipex->cmd2[0] = get_valid_path(env, pipex->cmd2[0]);
+	close(pipex->pipefd[1]);
 	dup2(pipex->pipefd[0], 0);
-	execve(pipex->cmd2[0], pipex->cmd2, env);
+	close(pipex->pipefd[0]);
+	if (execve(pipex->cmd2[0], pipex->cmd2, env) == -1)
+		perror("execve(second_child): ");
 }
 
 int	main(int ac, char **av, char **env)
@@ -67,7 +80,6 @@ int	main(int ac, char **av, char **env)
 	pipex = malloc(sizeof (t_pipex));
 	if (!pipex || pipe(pipex->pipefd) == -1)
 		return (0);
-	printf("pipe1:%d, pipe2:%d\n", pipex->pipefd[0], pipex->pipefd[1]);
 	pipex->cmd1 = ft_split(av[1], " ");
 	pipex->cmd2 = ft_split(av[2], " ");
 	pipex->pid1 = fork();
@@ -76,6 +88,8 @@ int	main(int ac, char **av, char **env)
 	pipex->pid2 = fork();
 	if (pipex->pid2 == 0)
 		second_child(pipex, env);
+	close(pipex->pipefd[0]);
+	close(pipex->pipefd[1]);
 	waitpid(pipex->pid1, NULL, 0);
 	waitpid(pipex->pid2, NULL, 0);
 	free_everything(pipex);
