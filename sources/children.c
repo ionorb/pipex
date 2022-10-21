@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   children.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/13 17:23:44 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/21 16:33:46 by yridgway         ###   ########.fr       */
+/*   Created: 2022/10/21 19:55:39 by yridgway          #+#    #+#             */
+/*   Updated: 2022/10/21 19:56:43 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,51 +52,34 @@ char	*get_valid_path(char **env, char *prog)
 	return (NULL);
 }
 
-void	first_child(t_pipex *pipex, char **env, int infd)
+void	first_child(t_pipex *pipex, char **env)
 {
-	pipex->cmd1[0] = get_valid_path(env, pipex->cmd1[0]);
+	pipex->validcmd1 = get_valid_path(env, pipex->cmd1[0]);
+	if (pipex->validcmd1 == NULL)
+		ft_exit_msg("first command not found", pipex);
 	close(pipex->pipefd[0]);
 	dup2(pipex->pipefd[1], 1);
-	dup2(infd, 0);
+	dup2(pipex->infd, 0);
 	close(pipex->pipefd[1]);
-	if (execve(pipex->cmd1[0], pipex->cmd1, env) == -1)
-		perror("execve(first_child): ");
+	if (execve(pipex->validcmd1, pipex->cmd1, env) == -1)
+	{
+		perror("execve(first_child)");
+		exit(0);
+	}
 }
 
-void	second_child(t_pipex *pipex, char **env, int outfd)
+void	second_child(t_pipex *pipex, char **env)
 {
-	pipex->cmd2[0] = get_valid_path(env, pipex->cmd2[0]);
+	pipex->validcmd2 = get_valid_path(env, pipex->cmd2[0]);
+	if (pipex->validcmd2 == NULL)
+		ft_exit_msg("second command not found", pipex);
 	close(pipex->pipefd[1]);
 	dup2(pipex->pipefd[0], 0);
-	dup2(outfd, 1);
+	dup2(pipex->outfd, 1);
 	close(pipex->pipefd[0]);
-	if (execve(pipex->cmd2[0], pipex->cmd2, env) == -1)
-		perror("execve(second_child): ");
-}
-
-int	main(int ac, char **av, char **env)
-{
-	t_pipex	*pipex;
-	int		infd;
-	int		outfd;
-
-	if (ac != 5)
-		ft_exit_msg("Wrong number of arguments");
-	infd = open(av[1], O_RDONLY);
-	outfd = open(av[4], O_RDWR | O_CREAT | O_TRUNC, 0644);
-	if (infd == -1 || outfd == -1)
-		ft_exit_msg("Problem opening/creating files");
-	pipex = malloc(sizeof (t_pipex));
-	if (!pipex || pipe(pipex->pipefd) == -1)
-		ft_exit_msg("Pipe failure");
-	pipex->cmd1 = ft_split(av[2], " ");
-	pipex->cmd2 = ft_split(av[3], " ");
-	pipex->pid1 = fork();
-	if (pipex->pid1 == 0)
-		first_child(pipex, env, infd);
-	pipex->pid2 = fork();
-	if (pipex->pid2 == 0)
-		second_child(pipex, env, outfd);
-	ft_end(pipex, infd, outfd);
-	return (0);
+	if (execve(pipex->validcmd2, pipex->cmd2, env) == -1)
+	{
+		perror("execve(second_child)");
+		exit(0);
+	}
 }

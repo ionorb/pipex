@@ -1,9 +1,9 @@
 LIBFT_PATH		=	./libs/libft
 LIBFT			=	$(LIBFT_PATH)/libft.a
 
-SOURCES_FILES	=	pipex.c finish.c
+SOURCES_FILES	=	pipex.c finish.c children.c
 
-SOURCES_DIR		=	.
+SOURCES_DIR		=	./sources
 
 HEADER			=	$(SOURCES_DIR)/pipex.h
 
