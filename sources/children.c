@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 19:55:39 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/21 20:13:54 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/22 23:03:07 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ char	*get_valid_path(char **env, char *prog)
 	i = 0;
 	cmd = ft_strjoin("/", prog);
 	paths = ft_get_paths(env);
+	if (!paths)
+		return (NULL);
 	while (paths[i])
 	{
 		cmdpath = ft_strjoin(paths[i], cmd);
