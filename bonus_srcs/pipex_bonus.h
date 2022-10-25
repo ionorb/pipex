@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   pipex_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:23:51 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/21 19:57:00 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/25 16:24:58 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#ifndef PIPEX_BONUS_H
+# define PIPEX_BONUS_H
 
 # include <sys/stat.h>
 # include <sys/types.h>
@@ -36,13 +36,13 @@ typedef struct s_pipex
 }	t_pipex;
 
 //finish
-void	ft_exit_msg(char *msg, t_pipex *pipex);
+void	ft_exit_msg(char *msg);
 void	close_free(t_pipex *pipex);
 void	ft_free_arr(char **cmd);
 void	ft_end(t_pipex *pipex);
 
 //children
-void	first_child(t_pipex *pipex, char **env);
-void	second_child(t_pipex *pipex, char **env);
+void	ft_child(char *cmd, char **env);
 
+void	ft_execute(char *cmd, char **env);
 #endif

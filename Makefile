@@ -30,7 +30,7 @@ BONUS			=	bonus
 CC				=	gcc
 RM				=	rm -f
 
-CFLAGS			=	-g3 -Wall -Wextra -Werror -D BUFFER_SIZE=100
+CFLAGS			=	-g3 -fsanitize=address -Wall -Wextra -Werror -D BUFFER_SIZE=100
 
 .c.o:		
 	$(CC) $(CFLAGS) -c $< -o $(<:.c=.o)
@@ -49,11 +49,13 @@ $(LIBFT):
 clean:
 	$(MAKE) -C $(LIBFT_PATH) clean
 	$(RM) $(OBJECTS)
-	$(RM) outfile
+	$(RM) $(BONUS_OBJECTS)
 
 fclean:		clean
 	$(MAKE) -C $(LIBFT_PATH) fclean
 	$(RM) $(NAME)
+	$(RM) $(BONUS)
+	$(RM) outfile
 
 re:			fclean all
 
