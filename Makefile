@@ -30,7 +30,7 @@ BONUS			=	bonus
 CC				=	gcc
 RM				=	rm -f
 
-CFLAGS			=	-g3 -fsanitize=address -Wall -Wextra -Werror -D BUFFER_SIZE=100
+CFLAGS			=	-g3 -Wall -Wextra -Werror -D BUFFER_SIZE=100
 
 .c.o:		
 	$(CC) $(CFLAGS) -c $< -o $(<:.c=.o)

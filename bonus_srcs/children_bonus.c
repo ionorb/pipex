@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 19:55:39 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/25 16:23:47 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/26 20:59:46 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ char	*get_valid_path(char **env, char *prog)
 		free(cmdpath);
 		i++;
 	}
+	ft_error(prog);
 	ft_free_arr(paths);
 	free(cmd);
 	return (NULL);
@@ -60,21 +61,22 @@ void	ft_execute(char *cmd, char **env)
 	char	*validcmd;
 
 	command = ft_split(cmd, " ");
-	if (access(command[0], X_OK) != 0)
+	if (command[0] && access(command[0], X_OK) != 0)
 		validcmd = get_valid_path(env, command[0]);
 	else
 		validcmd = command[0];
 	if (validcmd == NULL)
 	{
 		ft_free_arr(command);
-		ft_exit_msg("command not found");
+		exit(0);
 	}
 	if (execve(validcmd, command, env) == -1)
 	{
-		perror("execve(second_child)");
+		//ft_putstr_fd(strerror(errno), 2);
+		ft_free_arr(command);
+		free(validcmd);
 		exit(0);
 	}
-	ft_exit_msg("banana");
 }
 
 void	ft_child(char *cmd, char **env)

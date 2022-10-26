@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:23:51 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/25 16:24:58 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/26 20:59:07 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct s_pipex
 }	t_pipex;
 
 //finish
+void	ft_error(char *extra);
 void	ft_exit_msg(char *msg);
 void	close_free(t_pipex *pipex);
 void	ft_free_arr(char **cmd);
