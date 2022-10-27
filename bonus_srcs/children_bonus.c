@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 19:55:39 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/26 20:59:46 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/27 19:14:12 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	ft_execute(char *cmd, char **env)
 	}
 	if (execve(validcmd, command, env) == -1)
 	{
-		//ft_putstr_fd(strerror(errno), 2);
+		ft_putstr_fd(strerror(errno), 2);
 		ft_free_arr(command);
 		free(validcmd);
 		exit(0);

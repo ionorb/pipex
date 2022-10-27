@@ -3,7 +3,8 @@ LIBFT			=	$(LIBFT_PATH)/libft.a
 
 SOURCES_FILES	=	pipex.c finish.c children.c
 
-BONUS_FILES		=	pipex_bonus.c finish_bonus.c children_bonus.c
+BONUS_FILES		=	pipex_bonus.c finish_bonus.c children_bonus.c \
+					get_next_line.c
 
 SOURCES_DIR		=	./sources
 

@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:23:51 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/26 20:59:07 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/27 16:45:50 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,9 @@ void	ft_end(t_pipex *pipex);
 
 //children
 void	ft_child(char *cmd, char **env);
-
 void	ft_execute(char *cmd, char **env);
+
+//get_next_line
+char	*get_next_line(int fd, int a);
+
 #endif
