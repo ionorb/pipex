@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 19:55:39 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/27 19:14:12 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/27 21:51:54 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ void	ft_execute(char *cmd, char **env)
 		ft_putstr_fd(strerror(errno), 2);
 		ft_free_arr(command);
 		free(validcmd);
+		unlink(".temp_heredoc");
 		exit(0);
 	}
 }
