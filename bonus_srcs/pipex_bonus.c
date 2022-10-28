@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:23:44 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/27 21:37:11 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/28 13:34:53 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,15 @@ void	here_doc(char *limiter)
 int	ft_parse(int ac, char **av)
 {
 	int	fd;
+	int	heredoc;
 
-	if (ac < 5 || (ft_strncmp("here_doc", av[1], 8) == 0 && ac < 6))
+	heredoc = ft_strncmp("here_doc", av[1], 8);
+	if (ac < 5 || (heredoc == 0 && ac < 6))
 		ft_exit_msg("Wrong number of arguments");
-	fd = open(av[ac - 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
+	if (!heredoc)
+		fd = open(av[ac - 1], O_RDWR | O_CREAT | O_APPEND, 0644);
+	else
+		fd = open(av[ac - 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 		ft_exit_msg("unable to create output file");
 	return (fd);
