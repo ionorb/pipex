@@ -1,26 +1,15 @@
 LIBFT_PATH		=	./libs/libft
 LIBFT			=	$(LIBFT_PATH)/libft.a
 
-SOURCES_FILES	=	pipex.c finish.c children.c
-
-BONUS_FILES		=	pipex_bonus.c finish_bonus.c children_bonus.c \
-					get_next_line.c
+SOURCES_FILES	=	pipex.c finish.c children.c get_next_line.c
 
 SOURCES_DIR		=	./sources
 
-BONUS_DIR		=	./bonus_srcs
-
 HEADER			=	$(SOURCES_DIR)/pipex.h
-
-BONUS_HEADER	=	$(BONUS_DIR)/pipex_bonus.h
 
 SOURCES			=	$(addprefix $(SOURCES_DIR)/, $(SOURCES_FILES))
 
-BONUS_SOURCES	=	$(addprefix $(BONUS_DIR)/, $(BONUS_FILES))
-
 OBJECTS			= 	$(SOURCES:.c=.o)
-
-BONUS_OBJECTS	=	$(BONUS_SOURCES:.c=.o)
 
 MAKE			=	make
 
@@ -41,8 +30,8 @@ all:	$(NAME) $(BONUS)
 $(NAME):	$(LIBFT) $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) $(LIBFT) $(HEADER) -o $(NAME)
 
-$(BONUS):	$(LIBFT) $(BONUS_OBJECTS)
-	$(CC) $(CFLAGS) $(BONUS_OBJECTS) $(LIBFT) $(BONUS_HEADER) -o $(BONUS)
+$(BONUS):	$(LIBFT) $(OBJECTS)
+	$(CC) $(CFLAGS) $(OBJECTS) $(LIBFT) $(HEADER) -o $(NAME)
 
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_PATH)
@@ -50,7 +39,6 @@ $(LIBFT):
 clean:
 	$(MAKE) -C $(LIBFT_PATH) clean
 	$(RM) $(OBJECTS)
-	$(RM) $(BONUS_OBJECTS)
 
 fclean:		clean
 	$(MAKE) -C $(LIBFT_PATH) fclean

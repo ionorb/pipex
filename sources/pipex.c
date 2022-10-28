@@ -1,53 +1,75 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:23:44 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/22 23:05:14 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/28 13:34:53 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	init_pipex(t_pipex *pipex, char **av, int infd, int outfd)
+void	here_doc(char *limiter)
 {
-	pipex->infd = infd;
-	pipex->outfd = outfd;
-	pipex->cmd1 = ft_split(av[2], " ");
-	pipex->cmd2 = ft_split(av[3], " ");
-	if (!pipex->cmd1 || !pipex->cmd2)
+	char	*str;
+	int		fd;
+
+	fd = open(".temp_heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
+	str = NULL;
+	while (!str || ft_strncmp(limiter, str, ft_strlen(limiter)))
 	{
-		write(2, "problem with malloc of cmds\n", 28);
-		exit(0);
+		write(1, "heredoc> ", 9);
+		free(str);
+		str = get_next_line(0, 1);
+		write(fd, str, ft_strlen(str));
 	}
+	free(str);
+	close(fd);
+}
+
+int	ft_parse(int ac, char **av)
+{
+	int	fd;
+	int	heredoc;
+
+	heredoc = ft_strncmp("here_doc", av[1], 8);
+	if (ac < 5 || (heredoc == 0 && ac < 6))
+		ft_exit_msg("Wrong number of arguments");
+	if (!heredoc)
+		fd = open(av[ac - 1], O_RDWR | O_CREAT | O_APPEND, 0644);
+	else
+		fd = open(av[ac - 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
+	if (fd == -1)
+		ft_exit_msg("unable to create output file");
+	return (fd);
 }
 
 int	main(int ac, char **av, char **env)
 {
-	t_pipex	*pipex;
 	int		infd;
 	int		outfd;
+	int		i;
 
-	if (ac != 5)
-		return (write(2, "Wrong number of arguments\n", 27), 0);
-	infd = open(av[1], O_RDONLY);
-	outfd = open(av[4], O_RDWR | O_CREAT | O_TRUNC, 0644);
-	if (infd == -1 || outfd == -1)
-		return (write(2, "Problem opening/creating files\n", 31), 0);
-	pipex = malloc(sizeof (t_pipex));
-	if (!pipex || pipe(pipex->pipefd) == -1)
-		return (write(2, "Pipe failure\n", 13), 0);
-	init_pipex(pipex, av, infd, outfd);
-	pipex->pid1 = fork();
-	if (pipex->pid1 == 0)
-		first_child(pipex, env);
-	pipex->pid2 = fork();
-	if (pipex->pid2 == 0)
-		second_child(pipex, env);
-	close_free(pipex);
-	ft_end(pipex);
+	i = 1;
+	outfd = ft_parse(ac, av);
+	if (ft_strncmp("here_doc", av[1], 8) == 0)
+	{
+		here_doc(av[2]);
+		infd = open(".temp_heredoc", O_RDONLY);
+		i++;
+	}
+	else
+		infd = open(av[1], O_RDONLY);
+	dup2(infd, 0);
+	while (++i < ac - 2)
+		ft_child(av[i], env);
+	dup2(outfd, 1);
+	close(outfd);
+	close(infd);
+	unlink(".temp_heredoc");
+	ft_execute(av[i], env);
 	return (0);
 }
