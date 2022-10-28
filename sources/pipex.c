@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_bonus.c                                      :+:      :+:    :+:   */
+/*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:23:44 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/28 13:34:53 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/28 17:26:39 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,10 @@ int	ft_parse(int ac, char **av)
 	int	fd;
 	int	heredoc;
 
+	if (ac < 5)
+		ft_exit_msg("Wrong number of arguments");
 	heredoc = ft_strncmp("here_doc", av[1], 8);
-	if (ac < 5 || (heredoc == 0 && ac < 6))
+	if (heredoc == 0 && ac < 6)
 		ft_exit_msg("Wrong number of arguments");
 	if (!heredoc)
 		fd = open(av[ac - 1], O_RDWR | O_CREAT | O_APPEND, 0644);

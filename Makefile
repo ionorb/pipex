@@ -31,7 +31,7 @@ $(NAME):	$(LIBFT) $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) $(LIBFT) $(HEADER) -o $(NAME)
 
 $(BONUS):	$(LIBFT) $(OBJECTS)
-	$(CC) $(CFLAGS) $(OBJECTS) $(LIBFT) $(HEADER) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJECTS) $(LIBFT) $(HEADER) -o $(BONUS)
 
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_PATH)
