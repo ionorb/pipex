@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:23:44 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/28 17:26:39 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/07 22:59:50 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ int	ft_parse(int ac, char **av)
 	if (ac < 5)
 		ft_exit_msg("Wrong number of arguments");
 	heredoc = ft_strncmp("here_doc", av[1], 8);
-	if (heredoc == 0 && ac < 6)
-		ft_exit_msg("Wrong number of arguments");
+//	if (heredoc == 0 && ac < 6)
+//		ft_exit_msg("Wrong number of arguments");
 	if (!heredoc)
 		fd = open(av[ac - 1], O_RDWR | O_CREAT | O_APPEND, 0644);
 	else
@@ -47,6 +47,15 @@ int	ft_parse(int ac, char **av)
 	if (fd == -1)
 		ft_exit_msg("unable to create output file");
 	return (fd);
+}
+
+void	ft_checkfd(int fd)
+{
+	if (fd < 0)
+	{
+		ft_error(NULL);
+		exit(0);
+	}
 }
 
 int	main(int ac, char **av, char **env)
@@ -57,6 +66,7 @@ int	main(int ac, char **av, char **env)
 
 	i = 1;
 	outfd = ft_parse(ac, av);
+	ft_checkfd(outfd);
 	if (ft_strncmp("here_doc", av[1], 8) == 0)
 	{
 		here_doc(av[2]);
@@ -65,8 +75,9 @@ int	main(int ac, char **av, char **env)
 	}
 	else
 		infd = open(av[1], O_RDONLY);
+	ft_checkfd(infd);
 	dup2(infd, 0);
-	while (++i < ac - 2)
+	while (++i < ac - 2 && waitpid(0, NULL, 0))
 		ft_child(av[i], env);
 	dup2(outfd, 1);
 	close(outfd);

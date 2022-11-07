@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   children_bonus.c                                   :+:      :+:    :+:   */
+/*   children.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 19:55:39 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/27 21:51:54 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/07 23:22:30 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,22 +61,28 @@ void	ft_execute(char *cmd, char **env)
 	char	*validcmd;
 
 	command = ft_split(cmd, " ");
+	access(command[0], X_OK);
+	write(2, "hello\n", 6);
 	if (command[0] && access(command[0], X_OK) != 0)
+	{
+		write(2, "hello\n", 6);
 		validcmd = get_valid_path(env, command[0]);
+	}
 	else
-		validcmd = command[0];
+		validcmd = ft_strdup(command[0]);
 	if (validcmd == NULL)
 	{
 		ft_free_arr(command);
-		exit(0);
+		exit(1);
 	}
+	write(2, "hello\n", 6);
 	if (execve(validcmd, command, env) == -1)
 	{
 		ft_putstr_fd(strerror(errno), 2);
 		ft_free_arr(command);
 		free(validcmd);
 		unlink(".temp_heredoc");
-		exit(0);
+		exit(1);
 	}
 }
 
@@ -100,6 +106,5 @@ void	ft_child(char *cmd, char **env)
 	{
 		close(fd[1]);
 		dup2(fd[0], 0);
-		waitpid(pid, NULL, 0);
 	}
 }
