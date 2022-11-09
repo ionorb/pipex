@@ -1,7 +1,7 @@
 LIBFT_PATH		=	./libs/libft
 LIBFT			=	$(LIBFT_PATH)/libft.a
 
-SOURCES_FILES	=	pipex.c finish.c children.c get_next_line.c
+SOURCES_FILES	=	pipex.c finish.c children.c get_next_line.c exits.c
 
 SOURCES_DIR		=	./sources
 

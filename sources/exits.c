@@ -1,48 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   finish.c                                           :+:      :+:    :+:   */
+/*   exits.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/19 20:38:18 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/09 14:21:20 by yridgway         ###   ########.fr       */
+/*   Created: 2022/11/09 18:27:36 by yridgway          #+#    #+#             */
+/*   Updated: 2022/11/09 19:49:18 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	ft_free_arr(char **cmd)
+int	ft_permission_denied(char **prog)
 {
-	int	i;
-
-	i = 0;
-	while (cmd[i])
-	{
-		free(cmd[i]);
-		i++;
-	}
-	free(cmd);
+	ft_putstr_fd("zsh: permission denied: ", 2);
+	ft_putstr_fd(prog[0], 2);
+	write(2, "\n", 1);
+	return (126);
 }
 
-void	ft_error(char *extra)
+int	ft_command_not_found(char **prog)
 {
-	ft_putstr_fd("pipex: ", 2);
-	ft_putstr_fd(strerror(errno), 2);
-	if (extra)
-	{
-		write(2, ": ", 2);
-		ft_putstr_fd(extra, 2);
-	}
+	ft_putstr_fd("zsh: command not found: ", 2);
+	ft_putstr_fd(prog[0], 2);
 	write(2, "\n", 1);
-	unlink(".temp_heredoc");
-}
-
-void	ft_exit_msg(char *msg)
-{
-	ft_putstr_fd(msg, 2);
-	write(2, "\n", 1);
-	unlink(".temp_heredoc");
-	write(2, "[1]\n", 4);
-	exit(1);
+	return (127);
 }

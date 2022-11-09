@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 19:55:39 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/07 23:22:30 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/09 20:10:57 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,32 +26,50 @@ char	**ft_get_paths(char **env)
 	return (NULL);
 }
 
-char	*get_valid_path(char **env, char *prog)
+int	check_path(char *cmd, char **paths, char **prog, char *cmdpath)
+{
+	if (access(cmdpath, F_OK) == 0)
+	{
+		if (access(cmdpath, X_OK) == 0)
+		{
+			free(cmd);
+			ft_free_arr(paths);
+			return (0);
+		}
+		return (ft_permission_denied(prog));
+		free(cmdpath);
+	}
+	return (1);
+}
+
+char	*get_valid_path(char **env, char **prog)
 {
 	char	**paths;
 	char	*cmd;
 	char	*cmdpath;
 	int		i;
+	int		ext;
 
 	i = 0;
-	cmd = ft_strjoin("/", prog);
+	ext = 1;
+	cmd = ft_strjoin("/", prog[0]);
 	paths = ft_get_paths(env);
 	if (!paths)
 		return (NULL);
-	while (paths[i])
+	while (paths[i] && ext == 1)
 	{
 		cmdpath = ft_strjoin(paths[i], cmd);
-		if (access(cmdpath, X_OK) == 0)
-		{
-			free(cmd);
-			return (cmdpath);
-		}
-		free(cmdpath);
+		ext = check_path(cmd, paths, prog, cmdpath);
 		i++;
 	}
-	ft_error(prog);
+	if (!paths[i] && ext == 1)
+		ext = ft_command_not_found(prog);
+	if (ext == 0 && cmdpath)
+		return (cmdpath);
 	ft_free_arr(paths);
 	free(cmd);
+	ft_free_arr(prog);
+	exit(ext);
 	return (NULL);
 }
 
@@ -61,28 +79,31 @@ void	ft_execute(char *cmd, char **env)
 	char	*validcmd;
 
 	command = ft_split(cmd, " ");
-	access(command[0], X_OK);
-	write(2, "hello\n", 6);
-	if (command[0] && access(command[0], X_OK) != 0)
+//	printf("yogs: %s\n", command[0]);
+	if (command && command[0])// && command[0][0] != '.')
 	{
-		write(2, "hello\n", 6);
-		validcmd = get_valid_path(env, command[0]);
+		validcmd = get_valid_path(env, command);
+//		printf("yo: %s\n", validcmd);
+		write(2, "sloo\n", 5);
 	}
-	else
+	else if (command && command[0])
 		validcmd = ft_strdup(command[0]);
+	else
+		validcmd = NULL;
 	if (validcmd == NULL)
 	{
 		ft_free_arr(command);
+		write(2, "[4]\n", 4);
 		exit(1);
 	}
-	write(2, "hello\n", 6);
 	if (execve(validcmd, command, env) == -1)
 	{
 		ft_putstr_fd(strerror(errno), 2);
-		ft_free_arr(command);
 		free(validcmd);
 		unlink(".temp_heredoc");
-		exit(1);
+		ft_free_arr(command);
+		write(2, "[5]\n", 4);
+		exit(127);
 	}
 }
 

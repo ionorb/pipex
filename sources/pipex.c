@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:23:44 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/07 22:59:50 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/09 18:44:21 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ int	ft_parse(int ac, char **av)
 	if (ac < 5)
 		ft_exit_msg("Wrong number of arguments");
 	heredoc = ft_strncmp("here_doc", av[1], 8);
-//	if (heredoc == 0 && ac < 6)
-//		ft_exit_msg("Wrong number of arguments");
 	if (!heredoc)
 		fd = open(av[ac - 1], O_RDWR | O_CREAT | O_APPEND, 0644);
 	else
@@ -54,6 +52,7 @@ void	ft_checkfd(int fd)
 	if (fd < 0)
 	{
 		ft_error(NULL);
+		write(2, "[2]\n", 4);
 		exit(0);
 	}
 }
@@ -84,5 +83,6 @@ int	main(int ac, char **av, char **env)
 	close(infd);
 	unlink(".temp_heredoc");
 	ft_execute(av[i], env);
+	write(2, "[3]\n", 4);
 	return (0);
 }
