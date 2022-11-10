@@ -1,15 +1,23 @@
 LIBFT_PATH		=	./libs/libft
 LIBFT			=	$(LIBFT_PATH)/libft.a
 
-SOURCES_FILES	=	pipex.c finish.c children.c get_next_line.c exits.c
+SOURCES_FILES	=	pipex.c finish.c children.c get_next_line.c exits.c paths.c
 
 SOURCES_DIR		=	./sources
 
+SOURCES_DIR_B	=	./sources_bonus
+
 HEADER			=	$(SOURCES_DIR)/pipex.h
+
+BONUS_HEADER	=	$(SOURCES_DIR_B)/pipex.h
 
 SOURCES			=	$(addprefix $(SOURCES_DIR)/, $(SOURCES_FILES))
 
+BONUS_SOURCES	=	$(addprefix $(SOURCES_DIR_B)/, $(SOURCES_FILES))
+
 OBJECTS			= 	$(SOURCES:.c=.o)
+
+BONUS_OBJECTS	= 	$(BONUS_SOURCES:.c=.o)
 
 MAKE			=	make
 
@@ -18,7 +26,7 @@ NAME			=	pipex
 BONUS			=	bonus
 
 CC				=	gcc
-RM				=	rm -f
+RM				=	rm -rf
 
 CFLAGS			=	-g3 -Wall -Wextra -Werror -D BUFFER_SIZE=100
 
@@ -30,8 +38,8 @@ all:	$(NAME) $(BONUS)
 $(NAME):	$(LIBFT) $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) $(LIBFT) $(HEADER) -o $(NAME)
 
-$(BONUS):	$(LIBFT) $(OBJECTS)
-	$(CC) $(CFLAGS) $(OBJECTS) $(LIBFT) $(HEADER) -o $(BONUS)
+$(BONUS):	$(LIBFT) $(BONUS_OBJECTS)
+	$(CC) $(CFLAGS) $(BONUS_OBJECTS) $(LIBFT) $(BONUS_HEADER) -o $(NAME)_$(BONUS)
 
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_PATH)
@@ -43,8 +51,8 @@ clean:
 fclean:		clean
 	$(MAKE) -C $(LIBFT_PATH) fclean
 	$(RM) $(NAME)
-	$(RM) $(BONUS)
-	$(RM) outfile
+	$(RM) $(NAME)_$(BONUS)
+	$(RM) outfile cat infile input dossier
 
 re:			fclean all
 
