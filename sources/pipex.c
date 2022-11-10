@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:23:44 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/09 18:44:21 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/10 21:04:03 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ void	ft_checkfd(int fd)
 	if (fd < 0)
 	{
 		ft_error(NULL);
-		write(2, "[2]\n", 4);
 		exit(0);
 	}
 }
@@ -83,6 +82,5 @@ int	main(int ac, char **av, char **env)
 	close(infd);
 	unlink(".temp_heredoc");
 	ft_execute(av[i], env);
-	write(2, "[3]\n", 4);
 	return (0);
 }

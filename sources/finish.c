@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 20:38:18 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/09 14:21:20 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/10 21:03:53 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,5 @@ void	ft_exit_msg(char *msg)
 	ft_putstr_fd(msg, 2);
 	write(2, "\n", 1);
 	unlink(".temp_heredoc");
-	write(2, "[1]\n", 4);
 	exit(1);
 }
