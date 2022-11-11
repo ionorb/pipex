@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:23:44 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/10 21:04:03 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/11 18:37:19 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,20 @@ void	here_doc(char *limiter)
 		write(1, "heredoc> ", 9);
 		free(str);
 		str = get_next_line(0, 1);
-		write(fd, str, ft_strlen(str));
+		if (ft_strncmp(limiter, str, ft_strlen(limiter)))
+			write(fd, str, ft_strlen(str));
 	}
 	free(str);
 	close(fd);
+}
+
+void	ft_checkfd(int fd, int ext, char *extra)
+{
+	if (fd < 0)
+	{
+		ft_error(extra);
+		exit(ext);
+	}
 }
 
 int	ft_parse(int ac, char **av)
@@ -47,15 +57,6 @@ int	ft_parse(int ac, char **av)
 	return (fd);
 }
 
-void	ft_checkfd(int fd)
-{
-	if (fd < 0)
-	{
-		ft_error(NULL);
-		exit(0);
-	}
-}
-
 int	main(int ac, char **av, char **env)
 {
 	int		infd;
@@ -64,7 +65,7 @@ int	main(int ac, char **av, char **env)
 
 	i = 1;
 	outfd = ft_parse(ac, av);
-	ft_checkfd(outfd);
+	ft_checkfd(outfd, 0, NULL);
 	if (ft_strncmp("here_doc", av[1], 8) == 0)
 	{
 		here_doc(av[2]);
@@ -73,10 +74,11 @@ int	main(int ac, char **av, char **env)
 	}
 	else
 		infd = open(av[1], O_RDONLY);
-	ft_checkfd(infd);
+	ft_checkfd(infd, 0, NULL);
 	dup2(infd, 0);
-	while (++i < ac - 2 && waitpid(0, NULL, 0))
+	while (++i < ac - 2)// && waitpid(0, NULL, 0))
 		ft_child(av[i], env);
+	//waitpid(0, NULL, 0);
 	dup2(outfd, 1);
 	close(outfd);
 	close(infd);

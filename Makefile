@@ -33,13 +33,13 @@ CFLAGS			=	-g3 -Wall -Wextra -Werror -D BUFFER_SIZE=100
 .c.o:		
 	$(CC) $(CFLAGS) -c $< -o $(<:.c=.o)
 
-all:	$(NAME) $(BONUS)
+all:	$(NAME)
 
 $(NAME):	$(LIBFT) $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) $(LIBFT) $(HEADER) -o $(NAME)
 
 $(BONUS):	$(LIBFT) $(BONUS_OBJECTS)
-	$(CC) $(CFLAGS) $(BONUS_OBJECTS) $(LIBFT) $(BONUS_HEADER) -o $(NAME)_$(BONUS)
+	$(CC) $(CFLAGS) $(BONUS_OBJECTS) $(LIBFT) $(BONUS_HEADER) -o $(BONUS) 
 
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_PATH)
@@ -51,8 +51,8 @@ clean:
 fclean:		clean
 	$(MAKE) -C $(LIBFT_PATH) fclean
 	$(RM) $(NAME)
-	$(RM) $(NAME)_$(BONUS)
-	$(RM) outfile cat infile input dossier
+	$(RM) $(BONUS)
+	$(RM) outfile cat infile input dossier not out2 output dossier2 out out3 output2
 
 re:			fclean all
 
