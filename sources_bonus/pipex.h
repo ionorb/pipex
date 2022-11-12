@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:23:51 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/10 22:37:50 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/12 23:56:35 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	free_things(char **one, char **two, char *three);
 
 //children
 void	ft_child(char *cmd, char **env);
-void	ft_execute(char *cmd, char **env);
+void	ft_execute(char *cmd, char **env, int *ext);
 
 //exits
 int		ft_permission_denied(char *prog);
