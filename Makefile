@@ -23,7 +23,7 @@ MAKE			=	make
 
 NAME			=	pipex
 
-BONUS			=	pipex_bonus
+BONUS			=	bonus
 
 CC				=	gcc
 RM				=	rm -rf
@@ -33,7 +33,7 @@ CFLAGS			=	-g3 -Wall -Wextra -Werror -D BUFFER_SIZE=100
 .c.o:		
 	$(CC) $(CFLAGS) -c $< -o $(<:.c=.o)
 
-all:	$(NAME) $(BONUS)
+all:	$(NAME)
 
 $(NAME):	$(LIBFT) $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) $(LIBFT) $(HEADER) -o $(NAME)
@@ -52,7 +52,7 @@ fclean:		clean
 	$(MAKE) -C $(LIBFT_PATH) fclean
 	$(RM) $(NAME)
 	$(RM) $(BONUS)
-	$(RM) outfile cat infile input dossier not out2 output dossier2 out out3 output2 bonus pipex_bonus
+	$(RM) outfile cat infile input dossier not out2 output dossier2 out out3 output2
 
 re:			fclean all
 

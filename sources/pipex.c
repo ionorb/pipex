@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:23:44 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/12 23:34:03 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/10 22:17:51 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	main(int ac, char **av, char **env)
 	infd = open(av[1], O_RDONLY);
 	ft_checkfd(infd, 0, NULL);
 	dup2(infd, 0);
-	while (++i < ac - 2 && waitpid(0, NULL, 0))	
+	while (++i < ac - 2 && waitpid(0, NULL, 0))
 		ft_child(av[i], env);
 	dup2(outfd, 1);
 	close(outfd);

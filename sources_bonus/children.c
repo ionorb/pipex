@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 19:55:39 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/12 23:57:54 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/10 22:43:22 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,28 +31,27 @@ char	*get_valid_cmd(char **command, char **env, int *ext)
 	return (validcmd);
 }
 
-void	ft_execute(char *cmd, char **env, int *ext)
+void	ft_execute(char *cmd, char **env)
 {
 	char	**command;
 	char	*validcmd;
+	int		ext;
 
-	*ext = 1;
+	ext = 1;
 	command = ft_split(cmd, " ");
 	validcmd = get_valid_cmd(command, env, &ext);
 	if (validcmd == NULL)
 	{
 		ft_free_arr(command);
 		ext = ft_command_not_found(validcmd);
-		exit(*ext);
+		exit(ext);
 	}
-	write(2, "ban\n", 4);
-	ft_putnbr_fd(ext, 2);
 	if (execve(validcmd, command, env) == -1)
 	{
 		free(validcmd);
 		unlink(".temp_heredoc");
 		ft_free_arr(command);
-		exit(*ext);
+		exit(ext);
 	}
 }
 

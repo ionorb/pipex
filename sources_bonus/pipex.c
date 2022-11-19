@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:23:44 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/12 23:55:42 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/11 18:37:19 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,22 +16,19 @@ void	here_doc(char *limiter)
 {
 	char	*str;
 	int		fd;
-	char	*limit;
 
-	limit = ft_strjoin(limiter, "\n");
 	fd = open(".temp_heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
 	str = NULL;
-	while (!str || ft_strncmp(limit, str, ft_strlen(limit)))
+	while (!str || ft_strncmp(limiter, str, ft_strlen(limiter)))
 	{
 		write(1, "heredoc> ", 9);
 		free(str);
 		str = get_next_line(0, 1);
-		if (ft_strncmp(limit, str, ft_strlen(limit)))
+		if (ft_strncmp(limiter, str, ft_strlen(limiter)))
 			write(fd, str, ft_strlen(str));
 	}
 	free(str);
 	close(fd);
-	free(limit);
 }
 
 void	ft_checkfd(int fd, int ext, char *extra)
@@ -60,12 +57,14 @@ int	ft_parse(int ac, char **av)
 	return (fd);
 }
 
-void	ft_children(int	ac, char **av, char **env, int outfd)
+int	main(int ac, char **av, char **env)
 {
 	int		infd;
+	int		outfd;
 	int		i;
 
 	i = 1;
+	outfd = ft_parse(ac, av);
 	ft_checkfd(outfd, 0, NULL);
 	if (ft_strncmp("here_doc", av[1], 8) == 0)
 	{
@@ -77,28 +76,13 @@ void	ft_children(int	ac, char **av, char **env, int outfd)
 		infd = open(av[1], O_RDONLY);
 	ft_checkfd(infd, 0, NULL);
 	dup2(infd, 0);
-	while (++i < ac - 2)
+	while (++i < ac - 2)// && waitpid(0, NULL, 0))
 		ft_child(av[i], env);
-	close(infd);
-	unlink(".temp_heredoc");
-}
-
-int	main(int ac, char **av, char **env)
-{
-	int		pid;
-	int		outfd;
-	int		ext;
-
-	outfd = ft_parse(ac, av);
-	ft_children(ac, av, env, outfd);
-	pid = fork();
+	//waitpid(0, NULL, 0);
 	dup2(outfd, 1);
 	close(outfd);
-	if (pid == 0)
-	{
-		ft_execute(av[ac - 2], env, &ext);
-	}
-	else
-		waitpid(pid, NULL, 0);
-	return (ext);
+	close(infd);
+	unlink(".temp_heredoc");
+	ft_execute(av[i], env);
+	return (0);
 }
