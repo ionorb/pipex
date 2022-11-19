@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:23:44 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/11 18:37:19 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/19 17:49:53 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,22 @@ void	here_doc(char *limiter)
 {
 	char	*str;
 	int		fd;
+	char	*limit;
 
+	limit = ft_strjoin(limiter, "\n");
 	fd = open(".temp_heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
 	str = NULL;
-	while (!str || ft_strncmp(limiter, str, ft_strlen(limiter)))
+	while (!str || ft_strncmp(limit, str, ft_strlen(limit)))
 	{
 		write(1, "heredoc> ", 9);
 		free(str);
 		str = get_next_line(0, 1);
-		if (ft_strncmp(limiter, str, ft_strlen(limiter)))
+		if (ft_strncmp(limit, str, ft_strlen(limit)))
 			write(fd, str, ft_strlen(str));
 	}
 	free(str);
 	close(fd);
+	free(limit);
 }
 
 void	ft_checkfd(int fd, int ext, char *extra)
@@ -76,9 +79,8 @@ int	main(int ac, char **av, char **env)
 		infd = open(av[1], O_RDONLY);
 	ft_checkfd(infd, 0, NULL);
 	dup2(infd, 0);
-	while (++i < ac - 2)// && waitpid(0, NULL, 0))
+	while (++i < ac - 2)
 		ft_child(av[i], env);
-	//waitpid(0, NULL, 0);
 	dup2(outfd, 1);
 	close(outfd);
 	close(infd);

@@ -6,3 +6,5 @@ pipex-tester
 bonus
 outfile
 pipexMedic
+.swo
+*.swo

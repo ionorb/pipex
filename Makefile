@@ -23,7 +23,7 @@ MAKE			=	make
 
 NAME			=	pipex
 
-BONUS			=	bonus
+BONUS			=	pipex_bonus
 
 CC				=	gcc
 RM				=	rm -rf
@@ -33,7 +33,7 @@ CFLAGS			=	-g3 -Wall -Wextra -Werror -D BUFFER_SIZE=100
 .c.o:		
 	$(CC) $(CFLAGS) -c $< -o $(<:.c=.o)
 
-all:	$(NAME)
+all:	$(NAME) $(BONUS)
 
 $(NAME):	$(LIBFT) $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) $(LIBFT) $(HEADER) -o $(NAME)
